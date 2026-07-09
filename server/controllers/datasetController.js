@@ -14,9 +14,25 @@ export const uploadDataset=async(req,res)=>{
 
     const {workspaceId}=req.params;
 
-    const workspace=await Workspace.findById(workspaceId);
+    if (!mongoose.Types.ObjectId.isValid(workspaceId)) {
+        if (req.file && req.file.path && fs.existsSync(req.file.path)) {
+            fs.unlinkSync(req.file.path);
+        }
+        return res.status(400).json({error:"Invalid Workspace ID format."});
+    }
+
+    let workspace;
+    try {
+        workspace = await Workspace.findById(workspaceId);
+    } catch (err) {
+        if (req.file && req.file.path && fs.existsSync(req.file.path)) {
+            fs.unlinkSync(req.file.path);
+        }
+        return res.status(500).json({error:"Database error while finding workspace."});
+    }
+
     if(!workspace){
-        if (req.file.path && fs.existsSync(req.file.path)) {
+        if (req.file && req.file.path && fs.existsSync(req.file.path)) {
             fs.unlinkSync(req.file.path);
         }
         return res.status(404).json({error:"Workspace not found"});
@@ -94,12 +110,15 @@ export const uploadDataset=async(req,res)=>{
             parsedData=parsedData.slice(0,MAX_ROWS);
         }
 
+        const baseName = path.basename(originalFileName, fileExtension);
+        const safeBase = baseName.replace(/\s+/g, '_').replace(/[^a-zA-Z0-9._-]/g, '').trim();
+
         cloudinaryResult= await cloudinary.uploader.upload(localFilePath,{
             resource_type:'raw',
             //resource type raw means any file type, we are using raw because we are uploading csv, excel and json files
 
             folder:'livecolab/datasets',
-            public_id: `${workspace._id}_${Date.now()}_${path.basename(originalFileName, fileExtension)}`,
+            public_id: `${workspace._id}_${Date.now()}_${safeBase}`,
         });
 
         if (fs.existsSync(localFilePath)) {
@@ -127,6 +146,7 @@ export const uploadDataset=async(req,res)=>{
             dataset:savedDataset,   
         })
     } catch (error) {
+        console.error("DATASET UPLOAD ERROR:", error);
         if (localFilePath && fs.existsSync(localFilePath)) {
             fs.unlinkSync(localFilePath);
         }

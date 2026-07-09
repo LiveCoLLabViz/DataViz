@@ -1,0 +1,49 @@
+.upload-modal__dropzone {
+  border: 2px dashed var(--color-border, #D1D5DB);
+  border-radius: 10px;
+  padding: 26px;
+  text-align: center;
+  color: #6B7280;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+}
+
+.upload-modal__dropzone:hover {
+  border-color: var(--color-primary, #2563EB);
+  color: var(--color-primary, #2563EB);
+}
+
+.upload-modal__error {
+  color: #DC2626;
+  font-size: 13px;
+  margin-top: 10px;
+}
+
+.upload-modal__preview {
+  margin-top: 14px;
+  background: #F9FAFB;
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.upload-modal__preview-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 6px;
+}
+
+.upload-modal__preview ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 12px;
+  color: #4B5563;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}

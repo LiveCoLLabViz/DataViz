@@ -219,7 +219,8 @@ export const handleGoogleCallback=async(req,res,next)=>{
 
     res.cookie('token', token, { httpOnly: true, secure: true, sameSite: 'strict' });
 
-   res.redirect("http://localhost:5173/sign-in");
+   const clientUrl = process.env.CLIENT_URL || "http://localhost:5173";
+   res.redirect(`${clientUrl}/signin?token=${token}`);
   })(req,res,next) //(req,res,next) is important to execute the middleware function immediately
 }
 

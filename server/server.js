@@ -20,7 +20,17 @@ ConnectDB();
 const app=express()
 
 app.use(cors({
-    origin: process.env.CORS_ORIGIN || process.env.CLIENT_URL || 'http://localhost:5173',
+    origin: function (origin, callback) {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+        
+        // Allow any localhost origin or the specific CLIENT_URL
+        if (origin.startsWith('http://localhost:') || origin === process.env.CLIENT_URL || origin === process.env.CORS_ORIGIN) {
+            return callback(null, true);
+        }
+        
+        return callback(new Error('Not allowed by CORS'));
+    },
     credentials: true,
 }));
 

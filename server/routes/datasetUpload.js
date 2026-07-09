@@ -6,9 +6,10 @@ import authMiddleware from '../middlewares/authMIddleware.js';
 
 const router=express.Router()
 
-router.post('/upload/:workspaceId', authMiddleware, (req, res, next) => {
+router.post('/upload/:workspaceId', (req, res, next) => {
     upload.single('file')(req, res, (err) => {
         if (err) {
+            console.error("MULTER UPLOAD ERROR:", err);
             if (err.code === 'LIMIT_FILE_SIZE') {
                 return res.status(413).json({ error: 'File too large. Maximum size is 5MB.' });
             }
@@ -21,9 +22,9 @@ router.post('/upload/:workspaceId', authMiddleware, (req, res, next) => {
 //
 
 
-router.get('/workspace/:workspaceId', authMiddleware, getDatasetsByWorkspace);
-router.get('/dataset/:datasetId', authMiddleware, getDatasetById);
-router.delete('/delete/:datasetId', authMiddleware, deleteDataset);
+router.get('/workspace/:workspaceId', getDatasetsByWorkspace);
+router.get('/dataset/:datasetId', getDatasetById);
+router.delete('/delete/:datasetId', deleteDataset);
 
 
 
