@@ -32,10 +32,15 @@ app.use(cors({
         return callback(new Error('Not allowed by CORS'));
     },
     credentials: true,
+    //credentials:true means that the server will accept cookies and authentication headers from the client. 
+    // This is important for maintaining user sessions and handling authentication in a secure manner.
 }));
 
 app.use(express.json());
+//express.json() is a middleware that parses incoming requests with JSON payloads.
 app.use(express.urlencoded({extended:true}));
+//express.urlencoded({extended:true}) is a middleware that parses incoming requests with URL-encoded payloads.
+//example: If a client sends a POST request with form data, this middleware will parse that data and make it available in req.body.
 app.use(passport.initialize());
 
 

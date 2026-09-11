@@ -20,7 +20,7 @@ export default function initializeSocket(app) {
     });
 
     // Authentication
-//    io.use(socketAuth);
+    io.use(socketAuth);
 
     // Register all socket events
     setupSocket(io);
